@@ -1,0 +1,46 @@
+{
+  "fitnessHomePage": {
+    "header": {
+      "date": "Friday, 20 May",
+      "greeting": "Good Morning"
+    },
+    "todaysChallenge": {
+      "title": "Today's Challenge",
+      "activity": "Running",
+      "completed": 15,
+      "total": 20,
+      "progress": 0.75
+    },
+    "featuredPlans": [
+      {"id": "fp001", "title": "Massive Upper Body", "duration": "5 week", "frequency": "4x/week", "actionLabel": "Start Now", "imageUrl": "assets/images/young-fitness-man-studio.jpg"},
+      {"id": "fp002", "title": "Strong & Fit", "duration": "6 week", "frequency": "3x/week", "actionLabel": "Start Now", "imageUrl": "assets/images/young-fitness-man-studio.jpg"}
+    ],
+    "workoutPrograms": {
+      "filters": [
+        {"id": "all", "name": "All Type"},
+        {"id": "pilates", "name": "Pilates"},
+        {"id": "cardio", "name": "Cardio"},
+        {"id": "boxing", "name": "Boxing"},
+        {"id": "yoga", "name": "Yoga"}
+      ],
+      "items": [
+        {"id": "wp001", "title": "Yoga", "category": "Yoga", "calories": 210, "durationMinutes": 120, "isPro": false, "imageUrl": "assets/images/woman-working-out-gym (3).jpg"},
+        {"id": "wp002", "title": "Arm Strengthening", "category": "Pilates", "calories": 210, "durationMinutes": 120, "isPro": true, "imageUrl": "assets/images/woman-working-out-gym (5).jpg"},
+        {"id": "wp003", "title": "Cardio Training", "category": "Cardio", "calories": 260, "durationMinutes": 45, "isPro": false, "imageUrl": "assets/images/young-fitness-man-studio.jpg"}
+      ]
+    }
+  },
+  "fitnessGymDetailsPage": {
+    "gym": {
+      "id": "gym001",
+      "name": "Mid City Gym Training",
+      "location": "California, New York",
+      "heroImageUrl": "assets/images/2.jpg",
+      "rating": 4.5,
+      "reviewCount": 1232,
+      "description": "Lorem ipsum dolor sit amet consectetur. Blandit vitae aliquet eros laoreet quam sollicitudin.",
+      "amenities": [{"id": "showers", "name": "Showers"}, {"id": "lockers", "name": "Lockers"}, {"id": "parking", "name": "Parking"}, {"id": "wifi", "name": "Wi-Fi"}],
+      "pricing": {"amount": 69.0, "currency": "USD", "period": "week"}
+    }
+  }
+}
