@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:laborator4/cubit/fitness_cubit.dart';
+import 'package:laborator4/presentation/cubit/fitness_cubit.dart';
 import 'package:laborator4/domain/entities/fitness_entities.dart';
 import 'package:laborator4/domain/repositories/fitness_repository.dart';
 

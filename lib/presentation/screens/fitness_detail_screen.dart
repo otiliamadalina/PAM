@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../widgets/amenity_chip.dart';
-import '../domain/entities/fitness_entities.dart';
+import '../../domain/entities/fitness_entities.dart';
 
 class FitnessDetailScreen extends StatelessWidget {
   const FitnessDetailScreen({super.key, required this.gym});

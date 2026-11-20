@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../data/fitness_repository.dart';
-import '../domain/entities/fitness_entities.dart';
+import '../../data/fitness_repository.dart';
+import '../../domain/entities/fitness_entities.dart';
 
 enum FitnessStatus { initial, loading, success, empty, error }
 

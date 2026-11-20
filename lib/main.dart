@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'cubit/fitness_cubit.dart';
+import 'presentation/cubit/fitness_cubit.dart';
 import 'data/fitness_repository.dart';
-import 'screens/home_screen.dart';
+import 'presentation/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

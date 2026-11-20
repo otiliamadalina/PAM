@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/fitness_cubit.dart';
-import '../domain/entities/fitness_entities.dart';
+import '../../domain/entities/fitness_entities.dart';
 import '../theme/app_colors.dart';
 import '../widgets/challenge_card.dart';
 import '../widgets/plan_card.dart';
