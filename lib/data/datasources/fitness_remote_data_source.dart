@@ -15,7 +15,9 @@ class FitnessRemoteDataSource {
   Future<Map<String, dynamic>> fetchDetails() => _fetchJson(_detailsUrl);
 
   Future<Map<String, dynamic>> _fetchJson(String url) async {
-    final response = await _client.get(Uri.parse(url));
+    final response = await _client
+        .get(Uri.parse(url))
+        .timeout(const Duration(seconds: 15));
     if (response.statusCode != 200) {
       throw Exception('HTTP ${response.statusCode} while loading $url');
     }

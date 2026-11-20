@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/fitness_repository.dart';
 import '../../domain/entities/fitness_entities.dart';
@@ -38,7 +40,14 @@ class FitnessCubit extends Cubit<FitnessState> {
       final data = await _repository.getFitnessData();
       emit(state.copyWith(status: data.workouts.isEmpty ? FitnessStatus.empty : FitnessStatus.success, data: data));
     } catch (error) {
-      emit(state.copyWith(status: FitnessStatus.error, errorMessage: error.toString()));
+      final message = error is SocketException ||
+              error.toString().contains('Failed host lookup') ||
+              error.toString().contains('Network is unreachable') ||
+              error.toString().contains('Connection refused') ||
+              error.toString().contains('TimeoutException')
+          ? 'No internet connection. Check Wi-Fi or mobile data and try again.'
+          : 'Could not load data. Please try again.';
+      emit(state.copyWith(status: FitnessStatus.error, errorMessage: message));
     }
   }
 

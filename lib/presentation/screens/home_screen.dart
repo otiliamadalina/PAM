@@ -31,7 +31,62 @@ class _HomeScreenState extends State<HomeScreen> {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
         if (state.status == FitnessStatus.error) {
-          return Scaffold(body: Center(child: Text('Nu s-au putut încărca datele: ${state.errorMessage}')));
+          return Scaffold(
+            backgroundColor: AppColors.background,
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.wifi_off_rounded,
+                      size: 72,
+                      color: AppColors.grey,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Connection error',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.errorMessage ??
+                          'Could not load data. Please check your connection.',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 15,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () =>
+                          context.read<FitnessCubit>().load(),
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Try Again'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
         final data = state.data!;
         final workouts = state.visibleWorkouts;
