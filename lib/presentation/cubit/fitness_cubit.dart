@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/fitness_repository.dart';
 import '../../domain/entities/fitness_entities.dart';
+import '../../data/datasources/fitness_remote_data_source.dart';
 
 enum FitnessStatus { initial, loading, success, empty, error }
 
@@ -40,7 +42,13 @@ class FitnessCubit extends Cubit<FitnessState> {
       final data = await _repository.getFitnessData();
       emit(state.copyWith(status: data.workouts.isEmpty ? FitnessStatus.empty : FitnessStatus.success, data: data));
     } catch (error) {
-      final message = error is SocketException ||
+      final message = error is ApiException
+          ? 'Server error (${error.statusCode}). The API could not complete the request.'
+          : error is InvalidApiResponseException
+              ? 'The API returned invalid data and could not be processed.'
+              : error is TimeoutException
+                  ? 'The request timed out. The server took too long to respond.'
+                  : error is SocketException ||
               error.toString().contains('Failed host lookup') ||
               error.toString().contains('Network is unreachable') ||
               error.toString().contains('Connection refused') ||

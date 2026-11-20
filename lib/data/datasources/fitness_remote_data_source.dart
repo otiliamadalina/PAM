@@ -2,6 +2,18 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+class ApiException implements Exception {
+  const ApiException(this.statusCode);
+  final int statusCode;
+
+  @override
+  String toString() => 'The server returned HTTP $statusCode.';
+}
+
+class InvalidApiResponseException implements Exception {
+  const InvalidApiResponseException();
+}
+
 class FitnessRemoteDataSource {
   FitnessRemoteDataSource({http.Client? client}) : _client = client ?? http.Client();
 
@@ -19,11 +31,16 @@ class FitnessRemoteDataSource {
         .get(Uri.parse(url))
         .timeout(const Duration(seconds: 15));
     if (response.statusCode != 200) {
-      throw Exception('HTTP ${response.statusCode} while loading $url');
+      throw ApiException(response.statusCode);
     }
-    final decoded = jsonDecode(response.body);
+    late final dynamic decoded;
+    try {
+      decoded = jsonDecode(response.body);
+    } on FormatException {
+      throw const InvalidApiResponseException();
+    }
     if (decoded is! Map<String, dynamic>) {
-      throw const FormatException('Server returned invalid JSON');
+      throw const InvalidApiResponseException();
     }
     return decoded;
   }

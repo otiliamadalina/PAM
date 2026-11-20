@@ -31,6 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
         if (state.status == FitnessStatus.error) {
+          final isOffline = (state.errorMessage ?? '').contains('internet');
+          final isTimeout = (state.errorMessage ?? '').contains('timed out');
+          final title = isOffline
+              ? 'Connection error'
+              : isTimeout
+                  ? 'Request timed out'
+                  : 'Could not load the app';
+          final icon = isOffline
+              ? Icons.wifi_off_rounded
+              : isTimeout
+                  ? Icons.timer_off_outlined
+                  : Icons.cloud_off_outlined;
           return Scaffold(
             backgroundColor: AppColors.background,
             body: Center(
@@ -39,14 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.wifi_off_rounded,
+                    Icon(
+                      icon,
                       size: 72,
                       color: AppColors.grey,
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'Connection error',
+                    Text(
+                      title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 22,
