@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/fitness_cubit.dart';
+import '../domain/entities/fitness_entities.dart';
 import '../theme/app_colors.dart';
 import '../widgets/challenge_card.dart';
 import '../widgets/plan_card.dart';
@@ -15,6 +16,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void _openDetails(Gym gym) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => FitnessDetailScreen(gym: gym)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FitnessCubit, FitnessState>(
@@ -49,11 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: data.plans[0].title,
                           duration: data.plans[0].duration,
                           frequency: data.plans[0].frequency,
-                          imagePath: data.plans[0].imagePath,
+                          imagePath: data.plans[0].imageUrl,
                           color: const Color(0xFF4A4A4C),
                           width: 300,
                           imageAlignment: const Alignment(2, -1),
-                          onStart: () {},
+                          onStart: () => _openDetails(data.gym),
                         ),
                       if (data.plans.length > 1) ...[
                         const SizedBox(width: 16),
@@ -61,11 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: data.plans[1].title,
                           duration: data.plans[1].duration,
                           frequency: data.plans[1].frequency,
-                          imagePath: data.plans[1].imagePath,
+                          imagePath: data.plans[1].imageUrl,
                           color: const Color(0xFF3C4A5C),
                           width: 300,
                           imageAlignment: const Alignment(1, -1),
-                          onStart: () {},
+                          onStart: () => _openDetails(data.gym),
                         ),
                       ],
                     ],
@@ -110,10 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: workout.title,
                       kcal: workout.calories,
                       minutes: workout.durationMinutes,
-                      imagePath: workout.imagePath,
+                      imagePath: workout.imageUrl,
                       color: const Color(0xFF000000),
                       isPro: workout.isPro,
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => FitnessDetailScreen(gym: data.gym))),
+                      onTap: () => _openDetails(data.gym),
                     );
                   },
                 ),
@@ -134,11 +142,21 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 4),
           Text(greeting, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         ]),
-        Container(
-          width: 44,
-          height: 44,
-          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-          child: const Icon(Icons.notifications_none, color: Colors.black87),
+        IconButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No new notifications')),
+            );
+          },
+          icon: Container(
+            width: 44,
+            height: 44,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.notifications_none, color: Colors.black87),
+          ),
         ),
       ],
     );
@@ -149,7 +167,20 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const Text('See All', style: TextStyle(color: AppColors.green, fontWeight: FontWeight.w600)),
+        TextButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Showing all $title')),
+            );
+          },
+          child: const Text(
+            'See All',
+            style: TextStyle(
+              color: AppColors.green,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ],
     );
   }

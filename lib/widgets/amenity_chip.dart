@@ -4,11 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 class AmenityChip extends StatelessWidget {
   final IconData icon;
   final String label;
+  final String? iconUrl;
 
   const AmenityChip({
     super.key,
     required this.icon,
     required this.label,
+    this.iconUrl,
   });
 
   @override
@@ -27,11 +29,17 @@ class AmenityChip extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: const Color(0xFF6B7280),
-          ),
+          if (iconUrl != null)
+            Image.network(
+              iconUrl!,
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) =>
+                  Icon(icon, size: 20, color: const Color(0xFF6B7280)),
+            )
+          else
+            Icon(icon, size: 20, color: const Color(0xFF6B7280)),
           const SizedBox(width: 8),
           Text(
             label,

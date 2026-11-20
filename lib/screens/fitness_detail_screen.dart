@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../widgets/amenity_chip.dart';
-import '../models/fitness_models.dart';
+import '../domain/entities/fitness_entities.dart';
 
 class FitnessDetailScreen extends StatelessWidget {
   const FitnessDetailScreen({super.key, required this.gym});
@@ -89,6 +90,14 @@ class FitnessDetailScreen extends StatelessWidget {
                               height: 1.55,
                               letterSpacing: -0.28,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Gym description expanded'),
+                                  ),
+                                );
+                              },
                           ),
                         ],
                       ),
@@ -114,14 +123,25 @@ class FitnessDetailScreen extends StatelessWidget {
                       crossAxisSpacing: 5,
                       childAspectRatio: 155 / 52,
                       mainAxisExtent: 60,
-                      children: gym.amenities.map((amenity) => AmenityChip(icon: Icons.fitness_center, label: amenity)).toList(),
+                      children: gym.amenities
+                          .map((amenity) => AmenityChip(
+                                icon: Icons.fitness_center,
+                                label: amenity.name,
+                                iconUrl: amenity.iconUrl,
+                              ))
+                          .toList(),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          Positioned(left: 0, right: 0, bottom: 0, child: _buildBottomBar()),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildBottomBar(context, gym),
+          ),
         ],
       ),
     );
@@ -133,10 +153,19 @@ class FitnessDetailScreen extends StatelessWidget {
         SizedBox(
           height: 360,
           width: double.infinity,
-          child: Image.asset(
-            gym.heroImagePath,
-            fit: BoxFit.cover,
-          ),
+          child: gym.heroImageUrl.startsWith('assets/')
+              ? Image.asset(gym.heroImageUrl, fit: BoxFit.cover)
+              : Image.network(
+                  gym.heroImageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => Container(
+                    color: const Color(0xFF333333),
+                    child: const Center(
+                      child: Icon(Icons.fitness_center,
+                          color: Colors.white54, size: 64),
+                    ),
+                  ),
+                ),
         ),
         SafeArea(
           child: Padding(
@@ -148,7 +177,17 @@ class FitnessDetailScreen extends StatelessWidget {
                 children: [
                   _circleIconButton(
                       Icons.arrow_back, () => Navigator.pop(context)),
-                  _circleIconButton(Icons.more_vert, () {}),
+                  _circleIconButton(Icons.more_vert, () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (_) => const SafeArea(
+                        child: ListTile(
+                          leading: Icon(Icons.share_outlined),
+                          title: Text('Share gym'),
+                        ),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -173,7 +212,7 @@ class FitnessDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(BuildContext context, Gym gym) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(25, 16, 25, 40),
@@ -193,8 +232,8 @@ class FitnessDetailScreen extends StatelessWidget {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Total',
                 style: TextStyle(color: AppColors.grey, fontSize: 13),
               ),
@@ -202,15 +241,15 @@ class FitnessDetailScreen extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: r'$69.00',
-                      style: TextStyle(
+                      text: '\$${gym.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     TextSpan(
-                      text: ' /week',
-                      style: TextStyle(
+                      text: ' /${gym.period}',
+                      style: const TextStyle(
                         fontSize: 13,
                         color: AppColors.grey,
                       ),
@@ -221,7 +260,13 @@ class FitnessDetailScreen extends StatelessWidget {
             ],
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Reservation started for ${gym.name}'),
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.green,
               foregroundColor: Colors.white,

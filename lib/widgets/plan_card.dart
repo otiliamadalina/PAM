@@ -32,69 +32,96 @@ class PlanCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: color,
-        image: imagePath != null
-            ? DecorationImage(
-          image: AssetImage(imagePath!),
-          fit: BoxFit.cover,
-          alignment: imageAlignment,
-        )
-            : null,
       ),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black.withValues(alpha: 0.05),
-              Colors.black.withValues(alpha: 0.75),
-            ],
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                    color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-            Row(
-              children: [
-                const Icon(Icons.headphones, color: Colors.white70, size: 16),
-                const SizedBox(width: 6),
-                Text('$duration • $frequency',
-                    style: const TextStyle(color: Colors.white70, fontSize: 12)),
-              ],
-            ),
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(6),
-                onTap: onStart,
-                child: Container(
-                  height: 32,
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.green,
-                    borderRadius: BorderRadius.circular(6),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF0D0D12).withValues(alpha: 0.06),
-                        offset: const Offset(0, 1),
-                        blurRadius: 2,
-                      ),
-                    ],
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (imagePath != null)
+            imagePath!.startsWith('assets/')
+                ? Image.asset(
+                    imagePath!,
+                    fit: BoxFit.cover,
+                    alignment: imageAlignment,
+                  )
+                : Image.network(
+                    imagePath!,
+                    fit: BoxFit.cover,
+                    alignment: imageAlignment,
+                    errorBuilder: (_, _, _) => Container(color: color),
                   ),
-                  child: const Text(
-                    'Start Now',
-                    style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
-                  ),
-                ),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.05),
+                  Colors.black.withValues(alpha: 0.75),
+                ],
               ),
             ),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.headphones,
+                        color: Colors.white70, size: 16),
+                    const SizedBox(width: 6),
+                    Text(
+                      '$duration • $frequency',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(6),
+                    onTap: onStart,
+                    child: Container(
+                      height: 32,
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.green,
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF0D0D12)
+                                .withValues(alpha: 0.06),
+                            offset: const Offset(0, 1),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: const Text(
+                        'Start Now',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

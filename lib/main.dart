@@ -14,14 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Figma Design v3',
+      title: 'Fitness API App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF5F5F7),
         useMaterial3: true,
       ),
       home: BlocProvider(
-        create: (_) => FitnessCubit(FitnessRepository())..load(),
+        create: (_) => FitnessCubit(FitnessRepositoryImpl())..load(),
         child: const HomeScreen(),
       ),
     );

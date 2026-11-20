@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/fitness_repository.dart';
-import '../models/fitness_models.dart';
+import '../domain/entities/fitness_entities.dart';
 
 enum FitnessStatus { initial, loading, success, empty, error }
 
@@ -35,7 +35,7 @@ class FitnessCubit extends Cubit<FitnessState> {
   Future<void> load() async {
     emit(state.copyWith(status: FitnessStatus.loading));
     try {
-      final data = await _repository.loadFitnessData();
+      final data = await _repository.getFitnessData();
       emit(state.copyWith(status: data.workouts.isEmpty ? FitnessStatus.empty : FitnessStatus.success, data: data));
     } catch (error) {
       emit(state.copyWith(status: FitnessStatus.error, errorMessage: error.toString()));

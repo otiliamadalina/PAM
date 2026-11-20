@@ -34,7 +34,13 @@ class WorkoutCard extends StatelessWidget {
             Container(
               color: color,
               child: imagePath != null
-                  ? Image.asset(imagePath!, fit: BoxFit.cover)
+                  ? imagePath!.startsWith('assets/')
+                      ? Image.asset(imagePath!, fit: BoxFit.cover)
+                      : Image.network(
+                          imagePath!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(color: color),
+                        )
                   : null,
             ),
 
