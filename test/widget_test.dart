@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'dart:io';
 import 'package:laborator4/presentation/cubit/fitness_cubit.dart';
 import 'package:laborator4/domain/entities/fitness_entities.dart';
 import 'package:laborator4/domain/repositories/fitness_repository.dart';
@@ -41,6 +42,14 @@ class FakeFitnessRepository implements FitnessRepository {
       ),
     );
   }
+
+}
+
+class OfflineFitnessRepository implements FitnessRepository {
+  @override
+  Future<FitnessData> getFitnessData() async {
+    throw const SocketException('Network is unreachable');
+  }
 }
 
 void main() {
@@ -51,6 +60,15 @@ void main() {
     await cubit.load();
     expect(cubit.state.status, FitnessStatus.success);
     expect(cubit.state.data?.workouts, isNotEmpty);
+    await cubit.close();
+  });
+
+  test('shows an internet error when the repository is offline', () async {
+    final cubit = FitnessCubit(OfflineFitnessRepository());
+    await cubit.load();
+
+    expect(cubit.state.status, FitnessStatus.error);
+    expect(cubit.state.errorMessage, contains('No internet connection'));
     await cubit.close();
   });
 }

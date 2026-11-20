@@ -42,6 +42,7 @@ class FitnessCubit extends Cubit<FitnessState> {
       final data = await _repository.getFitnessData();
       emit(state.copyWith(status: data.workouts.isEmpty ? FitnessStatus.empty : FitnessStatus.success, data: data));
     } catch (error) {
+      final errorText = error.toString().toLowerCase();
       final message = error is ApiException
           ? 'Server error (${error.statusCode}). The API could not complete the request.'
           : error is InvalidApiResponseException
@@ -49,10 +50,14 @@ class FitnessCubit extends Cubit<FitnessState> {
               : error is TimeoutException
                   ? 'The request timed out. The server took too long to respond.'
                   : error is SocketException ||
-              error.toString().contains('Failed host lookup') ||
-              error.toString().contains('Network is unreachable') ||
-              error.toString().contains('Connection refused') ||
-              error.toString().contains('TimeoutException')
+              errorText.contains('failed host lookup') ||
+              errorText.contains('network is unreachable') ||
+              errorText.contains('connection refused') ||
+              errorText.contains('network unavailable') ||
+              errorText.contains('no address associated') ||
+              errorText.contains('connection closed') ||
+              errorText.contains('clientexception') ||
+              errorText.contains('timeout')
           ? 'No internet connection. Check Wi-Fi or mobile data and try again.'
           : 'Could not load data. Please try again.';
       emit(state.copyWith(status: FitnessStatus.error, errorMessage: message));
